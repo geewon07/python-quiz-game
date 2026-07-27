@@ -49,6 +49,49 @@ class Quiz:
         """딕셔너리(JSON에서 읽은 데이터)로부터 Quiz 객체를 생성한다."""
         return cls(data["question"], data["choices"], data["answer"])
 
+DEFAULT_QUIZ_DATA = [
+    {
+        "question": "range(1, 10, 2)가 만들어내는 숫자의 개수는?",
+        "choices": ["4개", "5개", "9개", "10개"],
+        "answer": 2,
+    },
+    {
+        "question": "다음 중 생성 후 값을 변경할 수 없는(불변) 자료형은?",
+        "choices": ["list", "dict", "tuple", "set"],
+        "answer": 3,
+    },
+    {
+        "question": "딕셔너리에 존재하지 않는 키로 접근하면 발생하는 예외는?",
+        "choices": ["IndexError", "KeyError", "ValueError", "NameError"],
+        "answer": 2,
+    },
+    {
+        "question": "클래스 메서드의 첫 번째 매개변수로 관례상 쓰이며, 인스턴스 자기 자신을 가리키는 것은?",
+        "choices": ["this", "self", "cls", "instance"],
+        "answer": 2,
+    },
+    {
+        "question": "json.dump()로 한글을 저장할 때 \\uXXXX 형태가 아닌 원래 글자로 저장하려면?",
+        "choices": ["indent=4", "sort_keys=True", "encoding='utf-8'", "ensure_ascii=False"],
+        "answer": 4,
+    },
+    {
+        "question": "with 문으로 파일을 열었을 때의 장점은?",
+        "choices": ["파일이 자동으로 닫힌다", "파일이 압축된다", "읽기 속도가 빨라진다", "파일이 백업된다"],
+        "answer": 1,
+    },
+    {
+        "question": "반복 횟수가 정해져 있지 않고, 조건이 참인 동안 계속 반복할 때 적합한 것은?",
+        "choices": ["for", "while", "if", "try"],
+        "answer": 2,
+    },
+]
+
+
+def create_default_quizzes():
+    """기본 퀴즈 데이터를 Quiz 객체 리스트로 변환한다."""
+    return [Quiz.from_dict(data) for data in DEFAULT_QUIZ_DATA]   
+
 def read_int(prompt, low, high):
     """low~high 범위의 정수를 입력받는다. 올바른 값이 나올 때까지 반복."""
     while True:
