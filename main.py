@@ -122,14 +122,42 @@ def read_text(prompt):
             return raw
         print("⚠️ 내용을 입력해 주세요.")
 
+def play_quiz(quizzes):
+    """퀴즈를 순서대로 출제하고 맞힌 개수를 반환한다."""
+    if not quizzes:
+        print("\n⚠️ 등록된 퀴즈가 없습니다. 먼저 퀴즈를 추가해 주세요.")
+        return None
+
+    total = len(quizzes)
+    score = 0
+
+    print(f"\n📝 퀴즈를 시작합니다! (총 {total}문제)")
+
+    for number, quiz in enumerate(quizzes, start=1):
+        print("\n" + "-" * 40)
+        quiz.show(number)
+        user_answer = read_int("\n정답 입력: ", 1, 4)
+
+        if quiz.is_correct(user_answer):
+            print("✅ 정답입니다!")
+            score += 1
+        else:
+            print(f"❌ 오답입니다. 정답은 {quiz.answer}번 ({quiz.answer_text()}) 입니다.")
+
+    print("\n" + "=" * 40)
+    print(f"🏆 결과: {total}문제 중 {score}문제 정답!")
+    print("=" * 40)
+
+    return score
 
 def main():
+    quizzes = create_default_quizzes()
     while True:
         print(MENU)
         choice = read_int("선택: ", 1, 5)
 
         if choice == 1:
-            print("\n[퀴즈 풀기] 준비 중입니다.")
+            play_quiz(quizzes)
         elif choice == 2:
             print("\n[퀴즈 추가] 준비 중입니다.")
         elif choice == 3:
