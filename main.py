@@ -150,6 +150,22 @@ def play_quiz(quizzes):
 
     return score
 
+def add_quiz(quizzes):
+    """새로운 퀴즈를 입력받아 목록에 추가한다."""
+    print("\n📌 새로운 퀴즈를 추가합니다.")
+
+    question = read_text("문제를 입력하세요: ")
+
+    choices = []
+    for i in range(1, 5):
+        choice = read_text(f"선택지 {i}: ")
+        choices.append(choice)
+
+    answer = read_int("정답 번호 (1-4): ", 1, 4)
+
+    quizzes.append(Quiz(question, choices, answer))
+    print("\n✅ 퀴즈가 추가되었습니다!")
+
 def main():
     quizzes = create_default_quizzes()
     while True:
@@ -159,7 +175,7 @@ def main():
         if choice == 1:
             play_quiz(quizzes)
         elif choice == 2:
-            print("\n[퀴즈 추가] 준비 중입니다.")
+            add_quiz(quizzes)
         elif choice == 3:
             print("\n[퀴즈 목록] 준비 중입니다.")
         elif choice == 4:
