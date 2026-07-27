@@ -188,27 +188,61 @@ def show_best_score(best_score):
 
     print(f"\n🏆 최고 점수: {best_score}점")
 
-def main():
-    quizzes = create_default_quizzes()
-    best_score = None
-    while True:
-        print(MENU)
-        choice = read_int("선택: ", 1, 5)
+class QuizGame:
+    """게임 전체 흐름과 데이터를 관리하는 클래스"""
 
-        if choice == 1:
-            score = play_quiz(quizzes)
-            if score is not None and (best_score is None or score > best_score):
-                best_score = score
-                print("🎉 새로운 최고 점수입니다!")
-        elif choice == 2:
-            add_quiz(quizzes)
-        elif choice == 3:
-            show_quiz_list(quizzes)
-        elif choice == 4:
-            show_best_score(best_score)
-        elif choice == 5:
-            print("\n👋 게임을 종료합니다.")
-            break
+    def __init__(self):
+        self.quizzes = create_default_quizzes()
+        self.best_score = None
+
+    def show_menu(self):
+        """메뉴를 출력하고 사용자의 선택을 반환한다."""
+        print(MENU)
+        return read_int("선택: ", 1, 5)
+
+    def play(self):
+        """퀴즈를 출제하고 최고 점수를 갱신한다."""
+        score = play_quiz(self.quizzes)
+
+        if score is None:
+            return
+
+        if self.best_score is None or score > self.best_score:
+            self.best_score = score
+            print("🎉 새로운 최고 점수입니다!")
+
+    def add(self):
+        """새로운 퀴즈를 등록한다."""
+        add_quiz(self.quizzes)
+
+    def show_list(self):
+        """등록된 퀴즈 목록을 보여준다."""
+        show_quiz_list(self.quizzes)
+
+    def show_score(self):
+        """최고 점수를 보여준다."""
+        show_best_score(self.best_score)
+
+    def run(self):
+        """게임 메인 루프를 실행한다."""
+        while True:
+            choice = self.show_menu()
+
+            if choice == 1:
+                self.play()
+            elif choice == 2:
+                self.add()
+            elif choice == 3:
+                self.show_list()
+            elif choice == 4:
+                self.show_score()
+            elif choice == 5:
+                print("\n👋 게임을 종료합니다.")
+                break
+
+def main():
+    game = QuizGame()
+    game.run()
 
 
 if __name__ == "__main__":
