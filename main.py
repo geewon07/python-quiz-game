@@ -1,5 +1,10 @@
 """나만의 퀴즈 게임 - 콘솔 애플리케이션"""
 
+import json
+import os
+
+STATE_FILE = "state.json"
+
 MENU = """
 ========================================
         🎯 나만의 퀴즈 게임 🎯
@@ -192,8 +197,9 @@ class QuizGame:
     """게임 전체 흐름과 데이터를 관리하는 클래스"""
 
     def __init__(self):
-        self.quizzes = create_default_quizzes()
+        self.quizzes = []
         self.best_score = None
+        self.load()
 
     def show_menu(self):
         """메뉴를 출력하고 사용자의 선택을 반환한다."""
@@ -210,10 +216,12 @@ class QuizGame:
         if self.best_score is None or score > self.best_score:
             self.best_score = score
             print("🎉 새로운 최고 점수입니다!")
+            self.save()
 
     def add(self):
         """새로운 퀴즈를 등록한다."""
         add_quiz(self.quizzes)
+        self.save()
 
     def show_list(self):
         """등록된 퀴즈 목록을 보여준다."""
@@ -237,16 +245,58 @@ class QuizGame:
             elif choice == 4:
                 self.show_score()
             elif choice == 5:
+                self.save()
                 print("\n👋 게임을 종료합니다.")
                 break
 
+    def load(self):
+        """state.json에서 데이터를 불러온다. 실패하면 기본 데이터를 사용한다."""
+        if not os.path.exists(STATE_FILE):
+            print("📂 저장된 데이터가 없어 기본 퀴즈로 시작합니다.")
+            self.quizzes = create_default_quizzes()
+            self.best_score = None
+            return
+
+        try:
+            with open(STATE_FILE, "r", encoding="utf-8") as f:
+                data = json.load(f)
+
+            self.quizzes = [Quiz.from_dict(item) for item in data["quizzes"]]
+            self.best_score = data.get("best_score")
+
+            score_text = f"{self.best_score}점" if self.best_score is not None else "기록 없음"
+            print(f"📂 저장된 데이터를 불러왔습니다. "
+                  f"(퀴즈 {len(self.quizzes)}개, 최고점수 {score_text})")
+
+        except (json.JSONDecodeError, KeyError, TypeError, OSError) as e:
+            print(f"⚠️ 데이터 파일을 읽을 수 없습니다: {e}")
+            print("⚠️ 기본 퀴즈 데이터로 초기화합니다.")
+            self.quizzes = create_default_quizzes()
+            self.best_score = None
+
+    def save(self):
+        """현재 데이터를 state.json에 저장한다."""
+        data = {
+            "quizzes": [quiz.to_dict() for quiz in self.quizzes],
+            "best_score": self.best_score,
+        }
+
+        try:
+            with open(STATE_FILE, "w", encoding="utf-8") as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+        except OSError as e:
+            print(f"⚠️ 데이터를 저장하지 못했습니다: {e}")
+
+                        
 def main():
     game = QuizGame()
-    game.run()
+    try:
+        game.run()
+    except (KeyboardInterrupt, EOFError):
+        print("\n\n⚠️ 프로그램을 종료합니다.")
+        game.save()
+        print("💾 데이터를 저장했습니다.")
 
 
 if __name__ == "__main__":
-    try:
-        main()
-    except (KeyboardInterrupt, EOFError):
-        print("\n\n⚠️ 프로그램을 종료합니다.")
+    main()
