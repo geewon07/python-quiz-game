@@ -11,6 +11,43 @@ MENU = """
 5. 종료
 ========================================"""
 
+class Quiz:
+    """개별 퀴즈 한 문제를 표현하는 클래스"""
+
+    def __init__(self, question, choices, answer):  #생성자
+        self.question = question    # 문제 (str)
+        self.choices = choices      # 선택지 4개 (list)
+        self.answer = answer        # 정답 번호 1~4 (int)
+
+    def show(self, number=None):
+        """문제와 선택지를 화면에 출력한다."""
+        title = f"[문제 {number}]" if number else "[문제]"
+        print(f"\n{title}")
+        print(self.question)
+        print()
+        for i, choice in enumerate(self.choices, start=1):
+            print(f"{i}. {choice}")
+
+    def is_correct(self, user_answer):
+        """사용자가 입력한 번호가 정답인지 판별한다."""
+        return user_answer == self.answer
+
+    def answer_text(self):
+        """정답 선택지의 실제 내용을 반환한다."""
+        return self.choices[self.answer - 1]
+
+    def to_dict(self):
+        """JSON 저장을 위해 딕셔너리로 변환한다."""
+        return {
+            "question": self.question,
+            "choices": self.choices,
+            "answer": self.answer,
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        """딕셔너리(JSON에서 읽은 데이터)로부터 Quiz 객체를 생성한다."""
+        return cls(data["question"], data["choices"], data["answer"])
 
 def read_int(prompt, low, high):
     """low~high 범위의 정수를 입력받는다. 올바른 값이 나올 때까지 반복."""
