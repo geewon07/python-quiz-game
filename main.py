@@ -129,7 +129,7 @@ def play_quiz(quizzes):
         return None
 
     total = len(quizzes)
-    score = 0
+    correct = 0
 
     print(f"\n📝 퀴즈를 시작합니다! (총 {total}문제)")
 
@@ -140,12 +140,14 @@ def play_quiz(quizzes):
 
         if quiz.is_correct(user_answer):
             print("✅ 정답입니다!")
-            score += 1
+            correct += 1
         else:
             print(f"❌ 오답입니다. 정답은 {quiz.answer}번 ({quiz.answer_text()}) 입니다.")
 
+    score = round(correct / total * 100)
+
     print("\n" + "=" * 40)
-    print(f"🏆 결과: {total}문제 중 {score}문제 정답!")
+    print(f"🏆 결과: {total}문제 중 {correct}문제 정답! ({score}점)")
     print("=" * 40)
 
     return score
@@ -178,20 +180,32 @@ def show_quiz_list(quizzes):
         print(f"[{number}] {quiz.question}")
     print("-" * 40)
 
+def show_best_score(best_score):
+    """최고 점수를 출력한다."""
+    if best_score is None:
+        print("\n⚠️ 아직 퀴즈를 푼 기록이 없습니다. 먼저 퀴즈를 풀어 보세요.")
+        return
+
+    print(f"\n🏆 최고 점수: {best_score}점")
+
 def main():
     quizzes = create_default_quizzes()
+    best_score = None
     while True:
         print(MENU)
         choice = read_int("선택: ", 1, 5)
 
         if choice == 1:
-            play_quiz(quizzes)
+            score = play_quiz(quizzes)
+            if score is not None and (best_score is None or score > best_score):
+                best_score = score
+                print("🎉 새로운 최고 점수입니다!")
         elif choice == 2:
             add_quiz(quizzes)
         elif choice == 3:
             show_quiz_list(quizzes)
         elif choice == 4:
-            print("\n[점수 확인] 준비 중입니다.")
+            show_best_score(best_score)
         elif choice == 5:
             print("\n👋 게임을 종료합니다.")
             break
