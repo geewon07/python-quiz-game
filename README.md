@@ -155,6 +155,17 @@ python-quiz-game/
 
 `feature/play` 브랜치에서 퀴즈 풀기 기능을 개발한 뒤, `--no-ff` 옵션으로 병합한 이력을 확인할 수 있습니다.
 
+### 원격 저장소 pull
+![git pull](docs/screenshots/git_pull.png)
+
+복제본에서 push한 변경사항을 원래 작업 디렉터리로 가져온 화면입니다.
+
+### Git 저장소 초기화 (init)
+![git init](docs/screenshots/git_init.png)
+
+`git init`과 `git status` 동작을 별도 디렉터리에서 확인한 화면입니다.
+(본 프로젝트는 GitHub에서 저장소를 생성한 뒤 `clone`으로 시작했습니다.)
+
 ## 배운 점
 
 - 문법을 아는 것과 하나의 프로그램을 완성하는 것이 다르다는 것을 체감했습니다. 특히 입력 검증처럼 사소해 보이는 부분이 여러 곳에서 반복되면서, 공통 함수로 분리하는 것이 왜 필요한지 알게 되었습니다.
